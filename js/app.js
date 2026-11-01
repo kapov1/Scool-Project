@@ -401,10 +401,10 @@
     const nodeMap = new Map(sceneNodes.map((node) => [node.id, node]));
     const defs = `
       <defs>
-        <marker id="arrowhead" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
+        <marker id="arrowhead" data-base-width="12" data-base-height="12" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
           <path d="M 1 1 L 11 6 L 1 11 z" fill="#8bb5f7"></path>
         </marker>
-        <marker id="arrowhead-return" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
+        <marker id="arrowhead-return" data-base-width="12" data-base-height="12" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
           <path d="M 1 1 L 11 6 L 1 11 z" fill="#72d3ad"></path>
         </marker>
       </defs>`;
@@ -419,6 +419,7 @@
     elements.svg.classList.remove('is-ready');
     // Плашки сообщений рисуются последними: их фон всегда остаётся над линиями и карточками.
     elements.svg.innerHTML = `${defs}<g class="edges-layer">${rendered.edgeLines}</g><g class="nodes-layer">${rendered.nodesMarkup}</g><g class="labels-layer">${rendered.edgeLabels}</g>`;
+    applyDiagramView();
     requestAnimationFrame(() => requestAnimationFrame(() => elements.svg.classList.add('is-ready')));
     elements.zoomLabel.textContent = '100%';
   }
@@ -555,10 +556,21 @@
     return Math.max(min, Math.min(max, value));
   }
 
+  function updateDiagramMarkerScale() {
+    const markers = elements.svg.querySelectorAll('marker[data-base-width][data-base-height]');
+    markers.forEach((marker) => {
+      const baseWidth = Number(marker.dataset.baseWidth);
+      const baseHeight = Number(marker.dataset.baseHeight);
+      marker.setAttribute('markerWidth', String(baseWidth / state.zoom));
+      marker.setAttribute('markerHeight', String(baseHeight / state.zoom));
+    });
+  }
+
   function applyDiagramView() {
     const width = state.baseWidth / state.zoom;
     const height = state.baseHeight / state.zoom;
     elements.svg.setAttribute('viewBox', `${state.viewX.toFixed(2)} ${state.viewY.toFixed(2)} ${width.toFixed(2)} ${height.toFixed(2)}`);
+    updateDiagramMarkerScale();
     elements.zoomLabel.textContent = `${Math.round(state.zoom * 100)}%`;
   }
 
