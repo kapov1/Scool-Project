@@ -6,6 +6,13 @@
   <meta name="theme-color" content="#0d1117">
   <meta name="description" content="Интерактивная учебная визуализация того, как браузер открывает HTTPS-сайт.">
   <title>Путь запроса — Компьютерные сети</title>
+  <script>
+    try {
+      if (localStorage.getItem('network-path-theme') === 'light') {
+        document.documentElement.dataset.theme = 'light';
+      }
+    } catch {}
+  </script>
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/stages.js" defer></script>
   <script src="js/app.js" defer></script>
@@ -16,7 +23,7 @@
       <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
       <div class="header-copy">
         <p class="eyebrow">ИНТЕРАКТИВНАЯ ВИЗУАЛИЗАЦИЯ</p>
-        <h1>Компьютерные сети</h1>
+        <h1><button class="home-button" id="home-button" type="button" aria-label="Вернуться на главную">Компьютерные сети</button></h1>
         <p class="subtitle">Что происходит, когда мы заходим на сайт?</p>
       </div>
     </header>
@@ -117,5 +124,15 @@
       <span class="footer-status"><span></span> ИНТЕРАКТИВНАЯ МОДЕЛЬ</span>
     </footer>
   </div>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Переключить на светлую тему" aria-pressed="false">
+    <svg class="theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="4"></circle>
+      <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
+    </svg>
+    <svg class="theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20.2 15.1A8.5 8.5 0 0 1 8.9 3.8 8.5 8.5 0 1 0 20.2 15.1Z"></path>
+    </svg>
+    <span id="theme-toggle-label">Светлая тема</span>
+  </button>
 </body>
 </html>
