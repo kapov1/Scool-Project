@@ -528,7 +528,7 @@ h1 { margin: 0; font-size: clamp(42px, 5vw, 64px); line-height: 1.08; letter-spa
 :root[data-theme="light"] .theme-icon-moon { display: block; }
 
 body, .url-card, .panel, .example-box, .note-box, .step-item, .step-number,
-.visual-panel, .reset-view-button, .diagram-viewport, .theme-toggle {
+.visual-panel, .reset-view-button, .diagram-viewport {
   transition-property: background-color, border-color, color, box-shadow;
   transition-duration: .26s;
   transition-timing-function: ease;
