@@ -28,6 +28,9 @@
   const $ = (selector) => document.querySelector(selector);
   const elements = {
     header: $('#page-header'),
+    homeButton: $('#home-button'),
+    themeToggle: $('#theme-toggle'),
+    themeToggleLabel: $('#theme-toggle-label'),
     start: $('#start-screen'),
     form: $('#url-form'),
     input: $('#site-url'),
@@ -59,6 +62,30 @@
   const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   })[char]);
+
+  function applyTheme(theme, persist = false) {
+    const activeTheme = theme === 'light' ? 'light' : 'dark';
+    const isLight = activeTheme === 'light';
+    document.documentElement.dataset.theme = activeTheme;
+
+    elements.themeToggle.setAttribute('aria-pressed', String(isLight));
+    elements.themeToggle.setAttribute(
+      'aria-label',
+      isLight ? 'Переключить на тёмную тему' : 'Переключить на светлую тему'
+    );
+    elements.themeToggleLabel.textContent = isLight ? 'Тёмная тема' : 'Светлая тема';
+
+    const themeColor = $('meta[name="theme-color"]');
+    if (themeColor) themeColor.content = isLight ? '#f6f8fa' : '#0d1117';
+
+    if (persist) {
+      try {
+        localStorage.setItem('network-path-theme', activeTheme);
+      } catch {
+        // The theme still works for this page view when storage is unavailable.
+      }
+    }
+  }
 
   function normalizeHttpsUrl(rawValue) {
     let value = rawValue.trim();
@@ -402,10 +429,10 @@
     const defs = `
       <defs>
         <marker id="arrowhead" data-base-width="12" data-base-height="12" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
-          <path d="M 1 1 L 11 6 L 1 11 z" fill="#8bb5f7"></path>
+          <path d="M 1 1 L 11 6 L 1 11 z" fill="var(--diagram-arrow, #8bb5f7)"></path>
         </marker>
         <marker id="arrowhead-return" data-base-width="12" data-base-height="12" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
-          <path d="M 1 1 L 11 6 L 1 11 z" fill="#72d3ad"></path>
+          <path d="M 1 1 L 11 6 L 1 11 z" fill="var(--diagram-return-arrow, #72d3ad)"></path>
         </marker>
       </defs>`;
 
@@ -531,7 +558,7 @@
     }, 680);
   }
 
-  function finishExperience() {
+  function finishExperience({ focusInput = true } = {}) {
     elements.workspace.classList.remove('is-visible');
     elements.workspace.inert = true;
     elements.start.hidden = false;
@@ -549,7 +576,7 @@
     elements.input.value = 'https://example.com';
     elements.hint.textContent = 'Адрес нужен для примеров внутри схемы. Приложение не отправляет реальные сетевые запросы.';
     elements.hint.classList.remove('has-error');
-    window.setTimeout(() => elements.input.focus(), 620);
+    if (focusInput) window.setTimeout(() => elements.input.focus(), 620);
   }
 
   function clamp(value, min, max) {
@@ -636,6 +663,14 @@
   elements.viewport.addEventListener('pointercancel', stopDragging);
   elements.viewport.addEventListener('lostpointercapture', stopDragging);
 
+  elements.homeButton.addEventListener('click', () => {
+    if (state.started) finishExperience({ focusInput: false });
+  });
+  elements.themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+    applyTheme(currentTheme === 'light' ? 'dark' : 'light', true);
+  });
+
   elements.form.addEventListener('submit', startExperience);
   elements.input.addEventListener('input', () => {
     elements.hint.classList.remove('has-error');
@@ -653,6 +688,7 @@
   });
   elements.resetView.addEventListener('click', resetDiagramView);
 
+  applyTheme(document.documentElement.dataset.theme || 'dark');
   createTimeline();
   renderStage();
   applyDiagramView();
