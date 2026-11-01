@@ -167,10 +167,10 @@ h1 { margin: 0; font-size: clamp(42px, 5vw, 64px); line-height: 1.08; letter-spa
 .diagram-svg { display: block; width: 100%; height: 100%; overflow: visible; shape-rendering: geometricPrecision; text-rendering: geometricPrecision; }
 .edge-path { fill: none; stroke: #8bb5f7; stroke-width: 3.2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; marker-end: url(#arrowhead); vector-effect: non-scaling-stroke; transition: stroke-dashoffset .85s ease var(--edge-delay, 0s); }
 .diagram-svg.is-ready .edge-path { stroke-dashoffset: 0; }
-.edge-path.is-return { stroke: #72d3ad; marker-end: url(#arrowhead-green); }
+.edge-path.is-return { stroke: #72d3ad; marker-end: url(#arrowhead-return); }
 .edge-label-bg { fill: #111a25; fill-opacity: .98; stroke: #53677f; stroke-width: 1.2; vector-effect: non-scaling-stroke; }
 .edge-label { fill: #f0f5fb; font: 650 18px Inter, system-ui, sans-serif; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
-.edge-label-group { opacity: 0; transition: opacity .35s ease var(--edge-delay, 0s); }
+.edge-label-group { opacity: 0; transition: opacity .35s ease calc(var(--edge-delay, 0s) + .85s); }
 .diagram-svg.is-ready .edge-label-group { opacity: 1; }
 .diagram-svg .node-box, .diagram-svg .node-indicator { vector-effect: non-scaling-stroke; }
 .diagram-svg .node-title { font-size: 19px; font-weight: 700; }
@@ -267,7 +267,7 @@ h1 { margin: 0; font-size: clamp(42px, 5vw, 64px); line-height: 1.08; letter-spa
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; transition-delay: 0s !important; scroll-behavior: auto !important; }
 }
 
 /* Version 3: crisp vector arrows and compact labels on dedicated lanes. */

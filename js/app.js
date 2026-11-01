@@ -277,7 +277,7 @@
     };
   }
 
-  function renderLabel(label, centerX, centerY, availableWidth, fontSize = 15) {
+  function renderLabel(label, centerX, centerY, availableWidth, fontSize = 15, index = 0) {
     if (!label || availableWidth < 68) return '';
     const paddingX = 14;
     const innerWidth = Math.max(48, availableWidth - paddingX * 2);
@@ -287,7 +287,7 @@
     const lineHeight = fontSize + 3;
     const height = lines.length * lineHeight + 10;
     return `
-      <g class="edge-label-group">
+      <g class="edge-label-group" style="--edge-delay:${index * 0.07}s">
         <rect class="edge-label-bg" x="${centerX - width / 2}" y="${centerY - height / 2}" width="${width}" height="${height}" rx="8"></rect>
         ${svgText(lines, centerX, centerY, 'edge-label', lineHeight, fontSize)}
       </g>`;
@@ -322,7 +322,7 @@
         const available = Math.abs(x2 - x1) - 10;
         const centerX = (x1 + x2) / 2 + (edge.labelOffsetX || 0);
         const centerY = Number.isFinite(edge.labelY) ? edge.labelY : y - 42;
-        edgeLabels.push(renderLabel(edge.label, centerX, centerY, available, 16));
+        edgeLabels.push(renderLabel(edge.label, centerX, centerY, available, 16, index));
       }
     });
 
@@ -370,7 +370,7 @@
         const labelProbe = wrapTextToWidth(edge.label, Math.max(48, available - 28), 16, 2, 650);
         const labelHeight = labelProbe.length * 17.5 + 10;
         const labelCenterY = cardCenterY - cardHeight / 2 - labelHeight / 2 - 7;
-        edgeLabels.push(renderLabel(edge.label, centerX, labelCenterY, available, 16));
+        edgeLabels.push(renderLabel(edge.label, centerX, labelCenterY, available, 16, index));
       }
     });
 
@@ -477,8 +477,8 @@
       connector.classList.toggle('is-complete', index < state.furthest);
     });
 
-    elements.progress.style.width = `${(state.furthest + 1) / totalStages * 100}%`;
-    elements.progressCaption.textContent = `${state.furthest + 1} из ${totalStages} пройдено`;
+    elements.progress.style.width = `${(state.current + 1) / totalStages * 100}%`;
+    elements.progressCaption.textContent = `Текущий этап: ${state.current + 1} из ${totalStages}`;
     elements.back.disabled = state.current === 0;
 
     const finalStage = state.current === totalStages - 1;
