@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="description" content="Интерактивная учебная визуализация того, как браузер открывает HTTPS-сайт.">
+  <title>Путь запроса — Компьютерные сети</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/stages.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="page-header" id="page-header">
+      <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="header-copy">
+        <p class="eyebrow">ИНТЕРАКТИВНАЯ ВИЗУАЛИЗАЦИЯ</p>
+        <h1>Компьютерные сети</h1>
+        <p class="subtitle">Что происходит, когда мы заходим на сайт?</p>
+      </div>
+    </header>
+
+    <section class="start-screen" id="start-screen" aria-labelledby="start-title">
+      <form class="url-card" id="url-form" novalidate>
+        <p class="url-card-kicker">ПУТЕШЕСТВИЕ ОДНОГО ЗАПРОСА</p>
+        <label class="url-card-title" id="start-title" for="site-url">Какой сайт откроем?</label>
+        <div class="url-entry">
+          <div class="url-input-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 4 4"></path></svg>
+            <input id="site-url" name="url" type="text" value="https://example.com" placeholder="https://example.com" autocomplete="url" spellcheck="false" aria-describedby="start-hint">
+          </div>
+          <button class="start-button" type="submit">Начать <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+        </div>
+        <p class="start-hint" id="start-hint" aria-live="polite">Адрес нужен для примеров внутри схемы. Приложение не отправляет реальные сетевые запросы.</p>
+      </form>
+    </section>
+
+    <main class="workspace" id="workspace" inert>
+      <section class="info-panel panel" aria-labelledby="stage-title">
+        <div class="panel-topline">
+          <span class="panel-kicker">ТЕКУЩИЙ ЭТАП</span>
+          <span class="step-counter" id="step-counter">1 / 9</span>
+        </div>
+        <div class="stage-heading">
+          <span class="stage-number" id="stage-number">ЭТАП 1</span>
+          <h2 id="stage-title">Браузер разбирает адрес</h2>
+        </div>
+        <p class="stage-lead" id="stage-lead"></p>
+        <div class="content-section">
+          <h3>Что происходит?</h3>
+          <p id="stage-what"></p>
+        </div>
+        <div class="content-section">
+          <h3>Зачем это нужно?</h3>
+          <p id="stage-why"></p>
+        </div>
+        <div class="example-box" id="stage-example-wrap">
+          <span class="example-label" id="example-label">ПРИМЕР</span>
+          <pre id="stage-example"></pre>
+        </div>
+        <div class="note-box" id="stage-note-wrap">
+          <span class="note-icon" aria-hidden="true">i</span>
+          <p id="stage-note"></p>
+        </div>
+        <div class="source-links" id="stage-sources" aria-label="Источники по этому этапу"></div>
+      </section>
+
+      <nav class="steps-panel panel" aria-label="Этапы процесса">
+        <div class="panel-topline">
+          <span class="panel-kicker">ПУТЬ ЗАПРОСА</span>
+          <span class="timeline-total">9 этапов</span>
+        </div>
+        <div class="steps-list" id="steps-list" tabindex="0" aria-label="Список этапов; прокручивайте колесом мыши"></div>
+        <div class="timeline-footer"><span class="timeline-dot"></span><span id="timeline-state">Начало пути</span></div>
+      </nav>
+
+      <section class="visual-panel panel" aria-labelledby="diagram-title">
+        <div class="visual-heading">
+          <div>
+            <span class="panel-kicker">ВИЗУАЛИЗАЦИЯ</span>
+            <h2 id="diagram-title">Как это выглядит</h2>
+          </div>
+          <div class="visual-actions">
+            <span class="live-indicator"><span></span> СХЕМА</span>
+            <button class="reset-view-button" id="reset-view-button" type="button" title="Вернуть схему к исходному масштабу и положению">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.6 6.4M3 4v7h7"></path></svg>
+              Сбросить вид
+            </button>
+          </div>
+        </div>
+        <div class="diagram-viewport" id="diagram-viewport" aria-label="Схема. Её можно перемещать мышью и масштабировать колёсиком">
+          <svg class="diagram-svg" id="diagram-svg" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Схема текущего этапа"></svg>
+        </div>
+        <div class="diagram-footer">
+          <span class="diagram-dot"></span>
+          <span id="diagram-caption">Учебная схема процесса</span>
+          <span class="zoom-level" id="zoom-level">100%</span>
+        </div>
+      </section>
+
+      <footer class="stage-controls">
+        <button class="control-button secondary" id="back-button" type="button" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6 6-6-6 6-6"></path></svg>
+          Назад
+        </button>
+        <div class="progress-area">
+          <div class="progress-track" aria-label="Прогресс прохождения"><span class="progress-fill" id="progress-fill"></span></div>
+          <span class="progress-caption" id="progress-caption">1 из 9</span>
+        </div>
+        <button class="control-button primary" id="next-button" type="button">Далее <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></button>
+      </footer>
+    </main>
+
+    <footer class="page-footer">
+      <span>NETWORK PATH / ОБУЧАЮЩИЙ ПРОЕКТ</span>
+      <span class="footer-status"><span></span> ИНТЕРАКТИВНАЯ МОДЕЛЬ</span>
+    </footer>
+  </div>
+</body>
+</html>
